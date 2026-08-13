@@ -13,19 +13,19 @@ import {
   CheckSquare,
   CalendarDays,
   Settings,
-  User,
   Plus,
 } from "lucide-react";
 
 import Header from "./Header";
 import DashboardHeader from "./DashboardHeader";
-import SprintBoard from "@/components/dashboard/SprintBoard";
+import TodaySection from "@/components/dashboard/TodaySection";
+import UpcomingSection from "@/components/dashboard/UpcomingSection";
 import StatsSection from "../dashboard/StatsSection";
 
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useState } from "react";
 
-const projects = [
+const pages = [
   {
     name: "University",
     color: "bg-blue-500",
@@ -35,8 +35,8 @@ const projects = [
     color: "bg-emerald-500",
   },
   {
-    name: "Projects",
-    color: "bg-violet-500",
+    name: "Work",
+    color: "bg-purple-500",
   },
 ];
 
@@ -73,29 +73,29 @@ export default function WorkspaceLayout() {
 
       <Sidebar
         collapsible="offcanvas"
-        className="border-r border-slate-200"
+        className="border-r border-border-subtle bg-surface-1"
       >
 
-        <SidebarHeader className="px-5 py-6">
+        <SidebarHeader className="border-b border-border-subtle px-5 py-6">
 
           {/* Logo */}
 
           <div className="flex items-center gap-3">
 
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
 
-              <CheckSquare className="h-4 w-4 text-white" />
+              <CheckSquare className="h-4 w-4 text-primary-foreground" />
 
             </div>
 
             <div className="flex flex-col">
 
-              <span className="text-base font-semibold tracking-tight text-slate-900">
+              <span className="text-base font-semibold tracking-tight text-foreground">
                 TaskFlow
               </span>
 
-              <span className="text-xs text-slate-400">
-                Personal workspace
+              <span className="text-xs text-text-tertiary">
+                Personal organization
               </span>
 
             </div>
@@ -107,32 +107,32 @@ export default function WorkspaceLayout() {
 
         <SidebarContent className="px-3">
 
-          {/* Workspace */}
+          {/* Main Navigation */}
 
-          <div className="mb-7">
+          <div className="mb-8">
 
-            <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              Workspace
+            <p className="mb-3 px-3 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
+              Dashboard
             </p>
 
             <div className="space-y-1">
 
               <SidebarMenuButton
                 isActive
-                className="h-10 rounded-lg px-3 text-slate-700 data-active:bg-slate-100 data-active:text-slate-900"
+                className="h-9 rounded-lg px-3 text-text-secondary data-active:bg-sidebar-accent data-active:text-foreground"
               >
 
                 <LayoutDashboard className="h-4 w-4" />
 
                 <span>
-                  Overview
+                  Dashboard
                 </span>
 
               </SidebarMenuButton>
 
 
               <SidebarMenuButton
-                className="h-10 rounded-lg px-3 text-slate-600"
+                className="h-9 rounded-lg px-3 text-text-secondary hover:bg-sidebar-accent hover:text-foreground"
               >
 
                 <CheckSquare className="h-4 w-4" />
@@ -141,7 +141,7 @@ export default function WorkspaceLayout() {
                   Tasks
                 </span>
 
-                <span className="ml-auto text-xs text-slate-400">
+                <span className="ml-auto text-xs text-text-tertiary">
                   {tasks.length}
                 </span>
 
@@ -149,7 +149,7 @@ export default function WorkspaceLayout() {
 
 
               <SidebarMenuButton
-                className="h-10 rounded-lg px-3 text-slate-600"
+                className="h-9 rounded-lg px-3 text-text-secondary hover:bg-sidebar-accent hover:text-foreground"
               >
 
                 <CalendarDays className="h-4 w-4" />
@@ -165,19 +165,20 @@ export default function WorkspaceLayout() {
           </div>
 
 
-          {/* Projects */}
+          {/* My Pages */}
 
           <div>
 
-            <div className="mb-2 flex items-center justify-between px-3">
+            <div className="mb-3 flex items-center justify-between px-3">
 
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                Spaces
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
+                My Pages
               </p>
 
               <button
                 type="button"
-                className="flex h-5 w-5 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className="flex h-5 w-5 items-center justify-center rounded-md text-text-tertiary transition-colors hover:bg-sidebar-accent hover:text-foreground"
+                title="Create new page"
               >
 
                 <Plus className="h-3.5 w-3.5" />
@@ -189,20 +190,20 @@ export default function WorkspaceLayout() {
 
             <div className="space-y-1">
 
-              {projects.map((project) => (
+              {pages.map((page) => (
 
                 <button
-                  key={project.name}
+                  key={page.name}
                   type="button"
-                  className="flex h-9 w-full items-center gap-3 rounded-lg px-3 text-left text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                  className="flex h-8 w-full items-center gap-3 rounded-lg px-3 text-left text-sm text-text-secondary transition-colors hover:bg-sidebar-accent hover:text-foreground"
                 >
 
                   <span
-                    className={`h-2.5 w-2.5 rounded-full ${project.color}`}
+                    className={`h-2 w-2 rounded-full ${page.color}`}
                   />
 
-                  <span>
-                    {project.name}
+                  <span className="flex-1">
+                    {page.name}
                   </span>
 
                 </button>
@@ -218,10 +219,10 @@ export default function WorkspaceLayout() {
 
         {/* Footer */}
 
-        <SidebarFooter className="border-t border-slate-200 p-3">
+        <SidebarFooter className="border-t border-border-subtle p-3">
 
           <SidebarMenuButton
-            className="h-10 rounded-lg px-3 text-slate-600"
+            className="h-9 rounded-lg px-3 text-text-secondary hover:bg-sidebar-accent hover:text-foreground"
           >
 
             <Settings className="h-4 w-4" />
@@ -234,23 +235,23 @@ export default function WorkspaceLayout() {
 
 
           <SidebarMenuButton
-            className="h-11 rounded-lg px-3 text-slate-700"
+            className="h-10 rounded-lg px-3 text-text-secondary hover:bg-sidebar-accent hover:text-foreground"
           >
 
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-200">
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
 
-              <User className="h-3.5 w-3.5 text-slate-600" />
+              F
 
             </div>
 
             <div className="flex min-w-0 flex-col">
 
-              <span className="truncate text-sm font-medium">
-                Your workspace
+              <span className="truncate text-xs font-medium text-foreground">
+                Francois
               </span>
 
-              <span className="truncate text-xs text-slate-400">
-                Personal account
+              <span className="truncate text-xs text-text-tertiary">
+                Personal
               </span>
 
             </div>
@@ -266,7 +267,7 @@ export default function WorkspaceLayout() {
           MAIN APPLICATION
       ========================== */}
 
-      <SidebarInset className="bg-slate-50">
+      <SidebarInset className="bg-background">
 
         <Header
           addTask={addTask}
@@ -277,24 +278,25 @@ export default function WorkspaceLayout() {
 
         <main className="flex-1">
 
-          <div className="mx-auto w-full max-w-[1600px] px-5 py-8 sm:px-8 lg:px-10">
+          <div className="mx-auto w-full max-w-4xl px-6 py-8 sm:px-8 lg:px-10">
 
+            {/* Greeting and Context */}
             <DashboardHeader />
 
+            {/* Statistics */}
             <div className="mt-8">
-
-              <StatsSection
-                tasks={filteredTasks}
-              />
-
+              <StatsSection tasks={filteredTasks} />
             </div>
 
-
-            <SprintBoard
+            {/* Today's Focus */}
+            <TodaySection
               tasks={filteredTasks}
               updateTask={updateTask}
               deleteTask={deleteTask}
             />
+
+            {/* Upcoming */}
+            <UpcomingSection tasks={filteredTasks} />
 
           </div>
 

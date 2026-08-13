@@ -117,6 +117,45 @@
 
   --border: #232630;
   --input: #232630;
+
+  /* Semantic Colors */
+  --color-success: #10B981;        /* Green for completed */
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-success-subtle: #064E3B;
+
+  --color-warning: #F59E0B;        /* Amber for overdue */
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-warning-subtle: #78350F;
+
+  --color-info: #3B82F6;           /* Blue for due soon */
+  --color-info-bg: rgba(59, 130, 246, 0.1);
+  --color-info-subtle: #1E3A8A;
+
+  --color-neutral: #6B7280;        /* Gray for neutral info */
+  --color-neutral-bg: rgba(107, 114, 128, 0.1);
+
+  /* Surface levels */
+  --color-surface-0: #090B12;      /* Lowest (background) */
+  --color-surface-1: #0F1117;      /* Low (sidebar) */
+  --color-surface-2: #11131A;      /* Medium (card) */
+  --color-surface-3: #1A1D26;      /* High (hover) */
+  --color-surface-4: #232630;      /* Highest (active) */
+
+  /* Borders */
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-strong: rgba(255, 255, 255, 0.1);
+
+  /* Text variants */
+  --color-text-primary: #F4F4F5;
+  --color-text-secondary: #A1A1AA;
+  --color-text-tertiary: #71717A;
+
+  /* Category/Page colors */
+  --color-category-blue: #0EA5E9;
+  --color-category-purple: #A855F7;
+  --color-category-emerald: #10B981;
+  --color-category-rose: #F43F5E;
+  --color-category-orange: #F97316;
 }
 
 @layer base {

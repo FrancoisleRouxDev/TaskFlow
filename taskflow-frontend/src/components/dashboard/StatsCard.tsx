@@ -17,18 +17,18 @@ export default function StatsCard({
   iconColor = "text-indigo-400",
 }: StatsCardProps) {
   return (
-    <Card className="bg-card border-sidebar-border shadow-none">
+    <Card className="bg-surface-2 border-border-subtle shadow-none">
       <CardContent className="flex justify-between p-6">
         <div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-text-secondary">
             {title}
           </p>
 
-          <h2 className="mt-3 text-3xl font-bold">
+          <h2 className="mt-3 text-3xl font-bold text-foreground">
             {value}
           </h2>
 
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm text-text-tertiary">
             {subtitle}
           </p>
         </div>

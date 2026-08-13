@@ -25,30 +25,32 @@ export default function Header({
 
   return (
 
-    <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-border-subtle bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
 
-      <div className="flex h-16 items-center justify-between px-5 sm:px-8">
+      <div className="flex h-16 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
 
-        {/* Left */}
+        {/* Left - Sidebar Trigger */}
 
-        <div className="flex min-w-0 items-center gap-3">
-
-          <SidebarTrigger
-            className="text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-          />
+        <SidebarTrigger
+          className="text-text-secondary hover:bg-surface-2 hover:text-foreground"
+        />
 
 
-          <div className="relative hidden sm:block">
+        {/* Center - Search */}
+
+        <div className="flex-1 max-w-sm">
+
+          <div className="relative">
 
             <Search
-              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary"
             />
 
             <Input
-              placeholder="Search tasks..."
+              placeholder="Search tasks, events..."
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              className="h-9 w-[240px] border-slate-200 bg-slate-50 pl-9 text-sm shadow-none placeholder:text-slate-400 focus-visible:bg-white"
+              className="h-9 w-full border-border-subtle bg-surface-2 pl-9 text-sm shadow-none placeholder:text-text-tertiary focus-visible:bg-surface-3 focus-visible:border-primary"
             />
 
           </div>
@@ -56,14 +58,14 @@ export default function Header({
         </div>
 
 
-        {/* Right */}
+        {/* Right - Actions */}
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
 
           <Button
             variant="ghost"
             size="icon"
-            className="text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            className="text-text-secondary hover:bg-surface-2 hover:text-foreground"
           >
 
             <Bell className="h-4 w-4" />
