@@ -1,4 +1,4 @@
-import { Card, CardContent } from "../ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import type { LucideIcon } from "lucide-react";
 
 type StatsCardProps = {
@@ -14,26 +14,28 @@ export default function StatsCard({
   value,
   subtitle,
   icon: Icon,
-  iconColor = "text-indigo-400",
+  iconColor = "text-primary",
 }: StatsCardProps) {
   return (
-    <Card className="bg-surface-2 border-border-subtle shadow-none">
-      <CardContent className="flex justify-between p-6">
+    <Card className="border-border-subtle bg-surface-2 shadow-xs transition-all duration-150 hover:border-border-strong hover:bg-surface-3">
+      <CardContent className="flex items-start justify-between p-5">
         <div>
-          <p className="text-sm text-text-secondary">
+          <p className="text-xs font-medium text-text-secondary uppercase tracking-wider">
             {title}
           </p>
 
-          <h2 className="mt-3 text-3xl font-bold text-foreground">
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
             {value}
           </h2>
 
-          <p className="mt-2 text-sm text-text-tertiary">
+          <p className="mt-1 text-xs text-text-tertiary">
             {subtitle}
           </p>
         </div>
 
-        <Icon className={`h-5 w-5 ${iconColor}`} />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle bg-surface-3">
+          <Icon className={`h-4.5 w-4.5 ${iconColor}`} />
+        </div>
       </CardContent>
     </Card>
   );

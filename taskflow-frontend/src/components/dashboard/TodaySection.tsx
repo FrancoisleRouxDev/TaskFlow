@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import type { Task } from "@/types/task";
 import { Calendar } from "lucide-react";
+import PriorityBadge from "./PriorityBadge";
 
 interface TodaySectionProps {
     tasks: Task[];
@@ -13,16 +14,13 @@ export default function TodaySection({
     updateTask,
     deleteTask,
 }: TodaySectionProps) {
-    // Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split("T")[0];
 
-    // Filter tasks due today
     const todaysTasks = tasks.filter(
         (task) => task.dueDate && task.dueDate.startsWith(today)
     );
 
-    // Sort by priority (High > Medium > Low > Critical comes last for visual grouping)
-    const priorityOrder = { High: 0, Medium: 1, Low: 2, Critical: 3 };
+    const priorityOrder: Record<Task["priority"], number> = { Critical: 0, High: 1, Medium: 2, Low: 3 };
     const sortedTasks = [...todaysTasks].sort(
         (a, b) =>
             (priorityOrder[a.priority] ?? 999) - (priorityOrder[b.priority] ?? 999)
@@ -30,13 +28,13 @@ export default function TodaySection({
 
     return (
         <section className="mt-8">
-            <div className="mb-5 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-slate-400" />
-                <h2 className="text-lg font-semibold text-foreground">
-                    Today
+            <div className="mb-4 flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-text-tertiary" />
+                <h2 className="text-base font-semibold text-foreground">
+                    Today's Focus
                 </h2>
                 {sortedTasks.length > 0 && (
-                    <span className="ml-auto text-sm text-text-tertiary">
+                    <span className="ml-auto text-xs font-medium text-text-tertiary">
                         {sortedTasks.length}{" "}
                         {sortedTasks.length === 1 ? "task" : "tasks"}
                     </span>
@@ -44,7 +42,7 @@ export default function TodaySection({
             </div>
 
             {sortedTasks.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                     {sortedTasks.map((task, index) => (
                         <TodayTaskCard
                             key={task.id}
@@ -56,7 +54,7 @@ export default function TodaySection({
                     ))}
                 </div>
             ) : (
-                <Card className="border-dashed border-border-subtle bg-surface-2 p-6 text-center">
+                <Card className="border-dashed border-border-subtle bg-surface-2 p-6 text-center shadow-none">
                     <p className="text-sm text-text-tertiary">
                         No tasks scheduled for today
                     </p>
@@ -73,34 +71,14 @@ interface TodayTaskCardProps {
     deleteTask: (id: string) => void;
 }
 
-/**
- * Compact task card for Today section
- * Displays: completion checkbox, title, priority, time (if available)
- */
 function TodayTaskCard({
     task,
     updateTask,
 }: TodayTaskCardProps) {
     const isCompleted = task.status === "Done";
 
-    const getPriorityColor = (priority: string) => {
-        switch (priority) {
-            case "Critical":
-                return "bg-red-500/20 text-red-300";
-            case "High":
-                return "bg-orange-500/20 text-orange-300";
-            case "Medium":
-                return "bg-yellow-500/20 text-yellow-300";
-            case "Low":
-                return "bg-slate-500/20 text-slate-300";
-            default:
-                return "bg-slate-500/20 text-slate-300";
-        }
-    };
-
     return (
-        <Card className="flex items-start gap-3 border-border-subtle bg-surface-2 p-3 transition-colors hover:bg-surface-3">
-            {/* Completion Checkbox */}
+        <Card className="flex items-start gap-3.5 border-border-subtle bg-surface-2 p-3.5 shadow-xs transition-all duration-150 hover:border-border-strong hover:bg-surface-3">
             <input
                 type="checkbox"
                 checked={isCompleted}
@@ -110,13 +88,12 @@ function TodayTaskCard({
                         status: e.target.checked ? "Done" : "To Do",
                     });
                 }}
-                className="mt-1 h-5 w-5 cursor-pointer rounded border-border-strong accent-primary"
+                className="mt-0.5 h-4 w-4 cursor-pointer rounded border-border-strong accent-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-1"
             />
 
-            {/* Content */}
             <div className="flex-1 min-w-0">
                 <p
-                    className={`text-sm font-medium leading-tight ${
+                    className={`text-sm font-medium leading-snug ${
                         isCompleted
                             ? "line-through text-text-tertiary"
                             : "text-text-primary"
@@ -126,18 +103,10 @@ function TodayTaskCard({
                 </p>
 
                 <div className="mt-2 flex flex-wrap items-center gap-2">
-                    {/* Priority Badge */}
-                    <span
-                        className={`rounded-md px-2 py-1 text-xs font-medium ${getPriorityColor(
-                            task.priority
-                        )}`}
-                    >
-                        {task.priority}
-                    </span>
+                    <PriorityBadge priority={task.priority} />
 
-                    {/* Category Badge */}
                     {task.project && (
-                        <span className="rounded-md bg-surface-3 px-2 py-1 text-xs text-text-secondary">
+                        <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs text-text-secondary border border-border-subtle">
                             {task.project}
                         </span>
                     )}

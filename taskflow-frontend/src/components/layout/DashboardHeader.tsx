@@ -6,13 +6,10 @@ export default function DashboardHeader() {
 
   return (
     <div className="border-b border-border-subtle pb-6">
-      {/* Greeting */}
-      <h1 className="text-3xl font-bold text-foreground">
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
         {greeting}
       </h1>
-
-      {/* Context */}
-      <p className="mt-2 text-sm text-text-secondary">
+      <p className="mt-1.5 text-sm text-text-secondary leading-relaxed">
         {timeContext}
       </p>
     </div>
