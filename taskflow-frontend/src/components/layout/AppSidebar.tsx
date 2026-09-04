@@ -14,7 +14,7 @@ import {
   Plus,
 } from "lucide-react";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface AppSidebarProps {
   taskCount: number;
@@ -36,6 +36,10 @@ const pages = [
 ];
 
 export default function AppSidebar({ taskCount }: AppSidebarProps) {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const currentProject = location.pathname === "/tasks" ? searchParams.get("project") : null;
+
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -82,7 +86,7 @@ export default function AppSidebar({ taskCount }: AppSidebarProps) {
             <NavLink to="/tasks">
               {({ isActive }) => (
                 <SidebarMenuButton
-                  isActive={isActive}
+                  isActive={isActive && !currentProject}
                   className="h-9 w-full rounded-lg px-3 text-text-secondary hover:bg-sidebar-accent hover:text-foreground data-active:bg-sidebar-accent data-active:text-foreground"
                 >
                   <CheckSquare className="h-4 w-4" />
@@ -127,22 +131,29 @@ export default function AppSidebar({ taskCount }: AppSidebarProps) {
           </div>
 
           <div className="space-y-1">
-            {pages.map((page) => (
-              <button
-                key={page.name}
-                type="button"
-                className="flex h-8 w-full items-center gap-3 rounded-lg px-3 text-left text-sm text-text-secondary transition-colors hover:bg-sidebar-accent hover:text-foreground"
-              >
-                <span className={`h-2 w-2 rounded-full ${page.color}`} />
-                <span className="flex-1">{page.name}</span>
-              </button>
-            ))}
+            {pages.map((page) => {
+              const isPageActive = location.pathname === "/tasks" && currentProject === page.name;
+              return (
+                <NavLink
+                  key={page.name}
+                  to={`/tasks?project=${encodeURIComponent(page.name)}`}
+                  className={`flex h-8 w-full items-center gap-3 rounded-lg px-3 text-left text-sm transition-colors ${
+                    isPageActive
+                      ? "bg-sidebar-accent font-medium text-foreground"
+                      : "text-text-secondary hover:bg-sidebar-accent hover:text-foreground"
+                  }`}
+                >
+                  <span className={`h-2 w-2 rounded-full ${page.color}`} />
+                  <span className="flex-1">{page.name}</span>
+                </NavLink>
+              );
+            })}
           </div>
         </div>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border-subtle p-3">
-        <NavLink to="/Settings">
+        <NavLink to="/settings">
           {({ isActive }) => (
             <SidebarMenuButton
               isActive={isActive}

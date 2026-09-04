@@ -105,6 +105,11 @@ export default function TaskFilters({
                             {p}
                         </SelectItem>
                     ))}
+                    {filters.project !== "All" && !projects.includes(filters.project) && (
+                        <SelectItem key={filters.project} value={filters.project}>
+                            {filters.project}
+                        </SelectItem>
+                    )}
                 </SelectContent>
             </Select>
 

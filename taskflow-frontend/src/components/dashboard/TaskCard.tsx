@@ -12,6 +12,41 @@ interface TaskCardProps {
   deleteTask: (id: string) => void;
 }
 
+function formatRelativeDate(dateString: string): { label: string; className: string } {
+  if (!dateString) return { label: "", className: "text-text-tertiary" };
+
+  const date = new Date(dateString);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const taskDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const diffDays = Math.round(
+    (taskDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  if (diffDays < 0) {
+    return {
+      label: diffDays === -1 ? "Yesterday" : `${Math.abs(diffDays)}d overdue`,
+      className: "text-destructive",
+    };
+  }
+  if (diffDays === 0) {
+    return { label: "Today", className: "text-primary" };
+  }
+  if (diffDays === 1) {
+    return { label: "Tomorrow", className: "text-text-secondary" };
+  }
+  if (diffDays <= 7) {
+    return { label: `In ${diffDays} days`, className: "text-text-secondary" };
+  }
+  return {
+    label: date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
+    className: "text-text-tertiary",
+  };
+}
+
 export default function TaskCard({
   task,
   index,
@@ -19,6 +54,8 @@ export default function TaskCard({
   deleteTask,
 }: TaskCardProps) {
   const [open, setOpen] = useState(false);
+
+  const dueInfo = task.dueDate ? formatRelativeDate(task.dueDate) : null;
 
   return (
     <Draggable draggableId={task.id} index={index}>
@@ -43,10 +80,11 @@ export default function TaskCard({
                 )}
               </div>
 
-              {task.dueDate && (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span>📅</span>
-                  <span>{task.dueDate}</span>
+              {dueInfo && (
+                <div className="flex items-center gap-2 text-xs">
+                  <span className={`font-medium ${dueInfo.className}`}>
+                    {dueInfo.label}
+                  </span>
                 </div>
               )}
 

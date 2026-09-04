@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import type { Task } from "@/types/task";
 import TaskListCard from "./TaskListCard";
 
@@ -29,14 +29,15 @@ export default function TaskGroup({
             {/* Group Header */}
             <button
                 type="button"
+                aria-expanded={isOpen}
                 onClick={() => setIsOpen(!isOpen)}
-                className="group flex w-full items-center gap-2 rounded-lg px-1 py-2 text-left transition-colors hover:bg-surface-3"
+                className="group flex w-full items-center gap-2 rounded-lg px-1 py-2 text-left transition-colors hover:bg-surface-3 cursor-pointer"
             >
-                {isOpen ? (
-                    <ChevronDown className="h-3.5 w-3.5 text-text-tertiary" />
-                ) : (
-                    <ChevronRight className="h-3.5 w-3.5 text-text-tertiary" />
-                )}
+                <ChevronDown
+                    className={`h-3.5 w-3.5 text-text-tertiary transition-transform duration-200 ${
+                        isOpen ? "rotate-0" : "-rotate-90"
+                    }`}
+                />
 
                 <div className={`h-2 w-2 rounded-full ${dotColor}`} />
 
@@ -49,9 +50,13 @@ export default function TaskGroup({
                 </span>
             </button>
 
-            {/* Task List */}
-            {isOpen && (
-                <div className="mt-1.5 space-y-2 pl-1">
+            {/* Task List with Smooth Transition */}
+            <div
+                className={`grid transition-[grid-template-rows,opacity] duration-200 ease-in-out ${
+                    isOpen ? "grid-rows-[1fr] opacity-100 mt-1.5" : "grid-rows-[0fr] opacity-0"
+                }`}
+            >
+                <div className="overflow-hidden space-y-2 pl-1">
                     {tasks.map((task) => (
                         <TaskListCard
                             key={task.id}
@@ -61,7 +66,7 @@ export default function TaskGroup({
                         />
                     ))}
                 </div>
-            )}
+            </div>
         </div>
     );
 }

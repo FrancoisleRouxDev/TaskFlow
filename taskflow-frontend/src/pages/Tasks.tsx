@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Task } from "@/types/task";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 
 import TaskDialog from "@/components/dashboard/TaskDialog";
 
@@ -65,11 +65,53 @@ export default function Tasks() {
         searchTerm,
     } = useOutletContext<TaskContext>();
 
-    const [filters, setFilters] = useState<TaskFilterValues>({
+    const [searchParams, setSearchParams] = useSearchParams();
+    const projectFromUrl = searchParams.get("project");
+
+    const [filters, setFilters] = useState<TaskFilterValues>(() => ({
         status: "All",
         priority: "All",
-        project: "All",
-    });
+        project: projectFromUrl || "All",
+    }));
+
+    useEffect(() => {
+        setFilters((prev) => ({
+            ...prev,
+            project: projectFromUrl || "All",
+        }));
+    }, [projectFromUrl]);
+
+    const handleFiltersChange = (newFilters: TaskFilterValues) => {
+        setFilters(newFilters);
+        if (newFilters.project !== (projectFromUrl || "All")) {
+            if (newFilters.project === "All") {
+                setSearchParams((prev) => {
+                    const next = new URLSearchParams(prev);
+                    next.delete("project");
+                    return next;
+                });
+            } else {
+                setSearchParams((prev) => {
+                    const next = new URLSearchParams(prev);
+                    next.set("project", newFilters.project);
+                    return next;
+                });
+            }
+        }
+    };
+
+    const handleClearFilters = () => {
+        setFilters({
+            status: "All",
+            priority: "All",
+            project: "All",
+        });
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.delete("project");
+            return next;
+        });
+    };
 
     const [sortBy, setSortBy] = useState("dueDate");
 
@@ -151,7 +193,7 @@ export default function Tasks() {
             <div className="mt-6">
                 <TaskFilters
                     filters={filters}
-                    onFiltersChange={setFilters}
+                    onFiltersChange={handleFiltersChange}
                     projects={allProjects}
                     sortBy={sortBy}
                     onSortChange={setSortBy}
@@ -170,16 +212,7 @@ export default function Tasks() {
                                 : "No tasks match the current view."
                         }
                         actionLabel={hasActiveFilters ? "Clear Filters" : undefined}
-                        onAction={
-                            hasActiveFilters
-                                ? () =>
-                                    setFilters({
-                                        status: "All",
-                                        priority: "All",
-                                        project: "All",
-                                    })
-                                : undefined
-                        }
+                        onAction={hasActiveFilters ? handleClearFilters : undefined}
                     />
                 ) : (
                     STATUS_GROUPS.map((group) => {

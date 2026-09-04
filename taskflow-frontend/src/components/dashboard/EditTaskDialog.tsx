@@ -29,7 +29,7 @@ export default function EditTaskDialog({
 }: EditTaskDialogProps) {
     const [editedTask, setEditedTask] = useState(task);
     const [showSaveConfirm, setShowSaveConfirm] = useState(false);
-    const [, setShowDiscardConfirm] = useState(false);
+    const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     useEffect(() => {
@@ -38,16 +38,16 @@ export default function EditTaskDialog({
 
     const hasChanges = JSON.stringify(task) !== JSON.stringify(editedTask);
 
-    const handleSave = () => {
-        updateTask(editedTask);
-        setEditedTask(editedTask);
-        onOpenChange(false);
-    };
-
     const confirmSave = () => {
         updateTask(editedTask);
         setEditedTask(editedTask);
         setShowSaveConfirm(false);
+        onOpenChange(false);
+    };
+
+    const confirmDiscard = () => {
+        setEditedTask(task);
+        setShowDiscardConfirm(false);
         onOpenChange(false);
     };
 
@@ -88,16 +88,7 @@ export default function EditTaskDialog({
                 <DialogFooter className="flex justify-between">
                     <Button
                         variant="destructive"
-                        onClick={() => {
-                            if (
-                                window.confirm(
-                                    "Are you sure you want to delete this task?\n\nThis action cannot be undone."
-                                )
-                            ) {
-                                deleteTask(task.id);
-                                onOpenChange(false);
-                            }
-                        }}
+                        onClick={() => setShowDeleteConfirm(true)}
                     >
                         Delete
                     </Button>
@@ -105,21 +96,20 @@ export default function EditTaskDialog({
                     <div className="flex gap-2">
                         <Button
                             variant="outline"
-                            onClick={() => onOpenChange(false)}
+                            onClick={() => {
+                                if (hasChanges) {
+                                    setShowDiscardConfirm(true);
+                                } else {
+                                    onOpenChange(false);
+                                }
+                            }}
                         >
                             Cancel
                         </Button>
 
                         <Button
-                            onClick={() => {
-                                if (
-                                    window.confirm(
-                                        "Save the changes made to this task?"
-                                    )
-                                ) {
-                                    handleSave();
-                                }
-                            }}
+                            onClick={() => setShowSaveConfirm(true)}
+                            disabled={!hasChanges}
                         >
                             Save Changes
                         </Button>
@@ -130,7 +120,7 @@ export default function EditTaskDialog({
             <ConfirmDialog
                 open={showDeleteConfirm}
                 title="Delete Task"
-                description="This action cannot be undone."
+                description="Are you sure you want to delete this task? This action cannot be undone."
                 confirmText="Delete Task"
                 confirmVariant="destructive"
                 onConfirm={confirmDelete}
@@ -144,6 +134,17 @@ export default function EditTaskDialog({
                 confirmText="Save Changes"
                 onConfirm={confirmSave}
                 onCancel={() => setShowSaveConfirm(false)}
+            />
+
+            <ConfirmDialog
+                open={showDiscardConfirm}
+                title="Discard Changes?"
+                description="You have unsaved changes. Are you sure you want to discard them?"
+                confirmText="Discard"
+                confirmVariant="destructive"
+                cancelText="Keep Editing"
+                onConfirm={confirmDiscard}
+                onCancel={() => setShowDiscardConfirm(false)}
             />
         </Dialog>
     );

@@ -158,10 +158,11 @@
     * {
         @apply border-border outline-none;
     }
+    html {
+        @apply font-sans scroll-smooth;
+    }
     body {
         @apply bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary;
-    }
-    html {
-        @apply font-sans;
+        transition: background-color 0.25s ease, color 0.25s ease;
     }
 }
